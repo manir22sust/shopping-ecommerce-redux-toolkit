@@ -1,8 +1,22 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.scss";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCategories } from "../../store/categoriesSlice";
+import { getCartTotal } from "../../store/cartSlice";
 
 export const Navbar = () => {
+  const dispatch = useDispatch();
+  const { data: categories } = useSelector((state) => state.category);
+  const { totalItems } = useSelector((state) => state.cart);
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+    dispatch(getCartTotal());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <nav className="navbar">
       <div className="navbar-content">
@@ -12,39 +26,60 @@ export const Navbar = () => {
               <span className="text-regal-blue">Shopping</span>
               <span className="text-gold">Hub.</span>
             </Link>
+
             <form className="navbar-search flex">
-              <input type="text" placeholder="Search here..." />
+              <input type="text" placeholder="Search here ..." />
               <button type="submit" className="navbar-search-btn">
                 <i className="fas fa-search"></i>
               </button>
             </form>
+
             <div className="navbar-btns">
               <Link to="/cart" className="add-to-cart-btn flex">
-                <span className="btn--ico">
+                <span className="btn-ico">
                   <i className="fas fa-shopping-cart"></i>
                 </span>
                 <div className="btn-txt fw-5">
-                  cart
-                  <span className="cart-count-value">0</span>
+                  Cart
+                  <span className="cart-count-value">{totalItems}</span>
                 </div>
               </Link>
             </div>
           </div>
         </div>
+
         <div className="navbar-bottom bg-regal-blue">
           <div className="container flex flex-between">
-            <ul className="nav-links flex">
-              <button type="button" className="navbar-hide-btn text-white">
+            <ul
+              className={`nav-links flex ${
+                isSidebarOpen ? "show-nav-links" : ""
+              }`}
+            >
+              <button
+                type="button"
+                className="navbar-hide-btn text-white"
+                onClick={() => setIsSidebarOpen(false)}
+              >
                 <i className="fas fa-times"></i>
               </button>
-              <li>
-                <Link to="/" className="nav-link text-white">
-                  Demos
-                </Link>
-              </li>
+              {categories.map((category) => (
+                <li key={category.id}>
+                  <Link
+                    to={`/category/${category.id}`}
+                    className="nav-link text-white"
+                    onClick={() => setIsSidebarOpen(false)}
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
 
-            <button type="button" className="navbar-show-btn text-gold">
+            <button
+              type="button"
+              className="navbar-show-btn text-gold"
+              onClick={() => setIsSidebarOpen(true)}
+            >
               <i className="fas fa-bars"></i>
             </button>
           </div>

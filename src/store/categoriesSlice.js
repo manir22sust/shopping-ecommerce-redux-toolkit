@@ -69,7 +69,7 @@ export const fetchProductsByCategory = (categoryID, dataType) => {
 
     try {
       const response = await fetch(
-        `${BASE_URL}categories/${categoryID}/products`
+        `${BASE_URL}/categories/${categoryID}/products`
       );
       const data = await response.json();
 

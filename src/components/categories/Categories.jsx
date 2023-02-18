@@ -20,7 +20,7 @@ export const Categories = ({ categories, status }) => {
             </h3>
           </div>
           <div className="category-items grid">
-            {categories.slice(1, 5).map((category) => (
+            {categories.slice(0, 5).map((category) => (
               <Link to={`category/${category.id}`} key={category.id}>
                 <div className="category-item">
                   <div className="category-item-img">
